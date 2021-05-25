@@ -5,35 +5,51 @@ using static GMath.Gfx;
 
 namespace DJGraphic
 {   
-    static class MeshSet
+    static class MeshSet<V, P> where V : struct , ICoordinatesVertex<V> where P : struct, IProjectedVertex<P>
     {
-        public static void Init(Raster<MyVertex, MyProjectedVertex> render)
+        public static void Init(Raster<V, P> render, float4x4 viewMatrix, float4x4 projectionMatrix)
         {
             render.ClearRT(float4(0, 0, 0.2f, 1));
-            var glass1 = new GlassOfWater().GetMesh();
-            var glass2 = new GlassOfWater().GetMesh();
-            var jar = new JarOfWater().GetMesh();
-            var clown = new Clown().GetMesh();
             
-            glass1 = glass1.Transform(Transforms.Translate(-2.5f,2.5f,1f));
-            jar = jar.Transform(Transforms.Translate(-6.3f,0,4.3f));
+            var glass1 = GlassOfWater<V>.Mesh(0.5f);
+            glass1 = glass1.ConvertTo(Topology.Lines);
+            glass1 = glass1.Transform(GlassOfWater<V>.Transform1());
+            
+            var glass2 = GlassOfWater<V>.Mesh(0.5f);
+            glass2 = glass2.ConvertTo(Topology.Lines);
+            glass2 = glass2.Transform(GlassOfWater<V>.Transform2());
 
-            glass2 = glass2.Transform(Transforms.Translate(4.2f,6.4f,1.3f));
-            clown = clown.Transform(Transforms.Translate(0.5f,3.8f,-5.5f));
+            var jar = JarOfWater<V>.Mesh();
+            jar = jar.ConvertTo(Topology.Lines);
+            jar = jar.Transform(JarOfWater<V>.Transform());
 
+            var water = Waters<V>.Mesh();
+            water = water.ConvertTo(Topology.Lines);
+			water = water.Transform(Waters<V>.Transform());
 
-            float4x4 viewMatrix = Transforms.LookAtLH(float3(0, -10f, 2.3f), float3(0, 0, 0), float3(0, 0, 1));
-            float4x4 projectionMatrix = Transforms.PerspectiveFovLH(
-						pi_over_4, render.RenderTarget.Height / (float)render.RenderTarget.Width, 0.01f, 40);
+            var water1 = Waters<V>.MeshGlass(0.5f);
+            water1 = water1.ConvertTo(Topology.Lines);
+			water1 = water1.Transform(Waters<V>.Transform1());
 
-			  		 
+            var water2 = Waters<V>.MeshGlass(0.5f);
+            water2 = water2.ConvertTo(Topology.Lines);
+			water2 = water2.Transform(Waters<V>.Transform2());
+
+            var clown = Clown<V>.Mesh();
+            clown = clown.ConvertTo(Topology.Lines);
+			clown = clown.Transform(Clown<V>.Transform());
+
+            var test = Waters<V>.MeshTest();
+            test = test.ConvertTo(Topology.Lines);
+            //test = test.Transform(Waters<V>.TransformT());
+
 			// Define a vertex shader that projects a vertex into the NDC.
             render.VertexShader = v =>
             {
                 float4 hPosition = float4(v.Position, 1);
                 hPosition = mul(hPosition, viewMatrix);
                 hPosition = mul(hPosition, projectionMatrix);
-                return new MyProjectedVertex { Homogeneous = hPosition };
+                return new P { Homogeneous = hPosition };
             };
 
             // Define a pixel shader that colors using a constant value
@@ -42,10 +58,19 @@ namespace DJGraphic
                 return float4(p.Homogeneous.x / (1024.0f + 512.0f), p.Homogeneous.y / 1024.0f, 1, 1);
             };
             // Draw the mesh.
+
+            //render.DrawMesh(test);
+
             render.DrawMesh(glass1);
-            render.DrawMesh(glass2);
-            render.DrawMesh(jar);
-            render.DrawMesh(clown);
+            //render.DrawMesh(water1);
+
+            //render.DrawMesh(glass2);
+            //render.DrawMesh(water2);
+            //render.DrawMesh(clown);
+
+            //render.DrawMesh(jar);
+            //render.DrawMesh(water);
+
         }
 
     }

@@ -9,94 +9,111 @@ namespace DJGraphic
 {
     class Program
     {
+        static Scene<PositionNormalCoordinate, Material> Set()
+        {
+            Scene<PositionNormalCoordinate, Material> scene = 
+                new Scene<PositionNormalCoordinate, Material>();
+
+            Texture2D planeTexture = Texture2D.LoadFromFile("../teachingImplentation/apkwood.jpg");
+            scene.Add(WoodPlane<PositionNormalCoordinate>.XY(), ModelMaterial.Texture(planeTexture),
+                Transforms.Translate(0,0,-1.4f));
+            
+            scene.Add(WoodPlane<PositionNormalCoordinate>.XZ(), ModelMaterial.Texture(planeTexture),
+                Transforms.Translate(0,7,0));
+
+            var glass1 = GlassOfWater<PositionNormalCoordinate>.Mesh(0.5f).Weld();
+            glass1.ComputeNormals();
+            scene.Add(
+                glass1.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                GlassOfWater<PositionNormalCoordinate>.Transform1()
+            );
+            
+            var glass2 = GlassOfWater<PositionNormalCoordinate>.Mesh(0.5f).Weld();
+            glass2.ComputeNormals();
+            scene.Add(
+                glass2.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                GlassOfWater<PositionNormalCoordinate>.Transform2()
+            );
+
+            var jar = JarOfWater<PositionNormalCoordinate>.Mesh().Weld();
+            jar.ComputeNormals();
+            scene.Add(
+                jar.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                JarOfWater<PositionNormalCoordinate>.Transform()
+            );
+
+            //var water = Waters<PositionNormalCoordinate>.Mesh();
+			//water = water.Transform(Waters<PositionNormalCoordinate>.Transform());
+
+            //var water1 = Waters<PositionNormalCoordinate>.MeshGlass(0.5f);
+			//water1 = water1.Transform(Waters<PositionNormalCoordinate>.Transform1());
+
+            //var water2 = Waters<PositionNormalCoordinate>.MeshGlass(0.5f);
+			//water2 = water2.Transform(Waters<PositionNormalCoordinate>.Transform2());
+
+            //var clown = Clown<PositionNormalCoordinate>.Mesh();
+			//clown = clown.Transform(Clown<PositionNormalCoordinate>.Transform());
+
+            return scene;
+        }
+
+        static float3 CameraPosition = float3(0, -4.5f, 1.1f);
+        static float3 LightPosition = float3(3, -2, 5);
+        static float3 LightIntensity = float3(1, 1, 1) * 200;
+
         static void Main(string[] args)
         {
-            var render = Mesh();
+            int Height = 1024;
+            int Width  = 1024 + 512;
 
-            render.RenderTarget.Save("test.rbm");
-            Console.WriteLine("Done.");
+            float4x4 viewMatrix = Transforms.LookAtLH(CameraPosition , float3(0, 0, 0), float3(0, 0, 1));
+            float4x4 projectionMatrix = Transforms.PerspectiveFovLH(
+						pi_over_4, Height / (float)Width, 0.01f, 40);
+    
+            
+            //Mesh(viewMatrix, projectionMatrix, Height, Width);
+            //RaycastingMesh(viewMatrix, projectionMatrix, Height, Width);
+            PathtracingMesh(viewMatrix, projectionMatrix, Height, Width);
         }
         
-        static Raster CloudPointer()
+
+        static void Mesh(float4x4 viewMatrix, float4x4 projectionMatrix, int Height, int Width ) 
         {
-            Raster render = new Raster(1024 + 512 , 1024);
+            Raster<PositionNormalCoordinate, MyProjectedVertex> render = new Raster<PositionNormalCoordinate, MyProjectedVertex>(Width, Height);
+            MeshSet<PositionNormalCoordinate, MyProjectedVertex>.Init(render, viewMatrix, projectionMatrix);
             
-            CloudPointerSet.Init(render);
-            return render;
-        }
+            render.RenderTarget.Save("test1.rbm");
+            Console.WriteLine("Done.");
 
-        static Raster<MyVertex, MyProjectedVertex> Mesh() 
+        }
+        static void RaycastingMesh(float4x4 viewMatrix, float4x4 projectionMatrix, int Height, int Width )
         {
-            Raster<MyVertex, MyProjectedVertex> render = new Raster<MyVertex, MyProjectedVertex>(1024 + 512 , 1024);
-            MeshSet.Init(render);
-            return render;
+            Texture2D texture = new Texture2D(Width , Height);
+            RaycastingSet.Init(Set(), texture, viewMatrix, projectionMatrix, LightPosition, LightIntensity );
+            
+            texture.Save("test1.rbm");
+            Console.WriteLine("Done.");
         }
-        static void A(Raster<MyVertex, MyProjectedVertex> render)
+
+        static void PathtracingMesh(float4x4 viewMatrix, float4x4 projectionMatrix, int Height, int Width )
         {
-             render.ClearRT(float4(0, 0, 0.2f, 1)); // clear with color dark blue.
+            Texture2D texture = new Texture2D(Width , Height);
+            var scene = Set();
 
-            var primitive = CreateModel();
-
-            /// Convert to a wireframe to render. Right now only lines can be rasterized.
-            primitive = primitive.ConvertTo(Topology.Lines);
-            primitive = primitive.Transform(Transforms.Scale(2f,1.5f,3.5f));
-
-
-            #region viewing and projecting
-
-            float4x4 viewMatrix = Transforms.LookAtLH(float3(0, -10f, 2.3f), float3(0, 0, 0), float3(0, 1, 0));
-            float4x4 projectionMatrix = Transforms.PerspectiveFovLH(pi_over_4, render.RenderTarget.Height / (float)render.RenderTarget.Width, 0.01f, 20);
-
-            // Define a vertex shader that projects a vertex into the NDC.
-            render.VertexShader = v =>
+            int pass = 0;
+            while (true)
             {
-                float4 hPosition = float4(v.Position, 1);
-                hPosition = mul(hPosition, viewMatrix);
-                hPosition = mul(hPosition, projectionMatrix);
-                return new MyProjectedVertex { Homogeneous = hPosition };
-            };
-
-            // Define a pixel shader that colors using a constant value
-            render.PixelShader = p =>
-            {
-                return float4(p.Homogeneous.x / 1024.0f, p.Homogeneous.y / 512.0f, 1, 1);
-            };
-
-            #endregion
-
-            // Draw the mesh.
-            render.DrawMesh(primitive);
+                Console.Write("Pass: " + pass);
+                PathtracingSet.Init(scene,texture,pass, viewMatrix, projectionMatrix, LightPosition, LightIntensity);
+                texture.Save("test.rbm");
+                Console.WriteLine();
+                pass++;
+            }
+            
         }
-        static Mesh<MyVertex> CreateModel()
-        {
-            float3[] contourn =
-            {
-                float3(0, 0 , -1f),
-                float3(1.5f, 0.5f ,-0.7f),
-                float3(1f, 0.5f , -0.65f ),
-                float3(1f, 0.5f , -0.6f ),
-                float3(0f, 0.5f , -0.2f),
-                float3(1f, 0.5f , 0.2f),
 
-            };
-            // Parametric representation of a sphere.
-            return Manifold<MyVertex>.Surface(30, 30, (u, v) =>
-            {
-                float alpha = u * 2 * pi;
-                Func<float,float3> eval = t => EvalBezier(contourn, t);
-                return float3(cos(alpha), sin(alpha), eval(v).z);
-            });
-
-            // Generative model
-            //return Manifold<MyVertex>.Generative(30, 30,
-            //    // g function
-            //    u => float3(cos(2 * pi * u), 0, sin(2 * pi * u)),
-            //    // f function
-            //    (p, v) => p + float3(cos(v * pi), 2*v-1, 0)
-            //);
-
-            // Revolution Sample with Bezier
-            return Manifold<MyVertex>.Revolution(30, 30, t => EvalBezier(contourn, t), float3(0, 1, 0));
-        }
     }
 }

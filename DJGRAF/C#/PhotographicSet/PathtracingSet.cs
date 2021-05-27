@@ -8,13 +8,11 @@ namespace DJGraphic
 {   
     public static class PathtracingSet
     {
-        public static void Init(
+
+        public static Raytracer<PTRayPayload, PositionNormalCoordinate, Material> Def(
             Scene<PositionNormalCoordinate, Material> scene,
-            Texture2D texture, int pass, 
-            float4x4 viewMatrix, float4x4 projectionMatrix, 
             float3 LightPosition, float3 LightIntensity)
         {
-
             Raytracer<PTRayPayload, PositionNormalCoordinate, Material> raycaster = 
                 new Raytracer<PTRayPayload, PositionNormalCoordinate, Material>();
             
@@ -23,6 +21,18 @@ namespace DJGraphic
             {
                 payload.Color = float3(0, 0, 0); // Blue, as the sky.
             };
+
+            return raycaster;
+        }
+
+        public static void Init(
+            Scene<PositionNormalCoordinate, Material> scene,
+            Texture2D texture, int pass, 
+            float4x4 viewMatrix, float4x4 projectionMatrix, 
+            Raytracer<PTRayPayload, PositionNormalCoordinate, Material> raycaster)
+        {
+
+
 
                   /// Render all points of the screen
             for (int px = 0; px < texture.Width; px++)

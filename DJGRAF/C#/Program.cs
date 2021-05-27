@@ -62,7 +62,7 @@ namespace DJGraphic
 
         static float3 CameraPosition = float3(0, -4.5f, 1.1f);
         static float3 LightPosition = float3(3, -2, 5);
-        static float3 LightIntensity = float3(1, 1, 1) * 200;
+        static float3 LightIntensity = float3(1, 1, 1) * 100;
 
         static void Main(string[] args)
         {
@@ -101,15 +101,34 @@ namespace DJGraphic
         static void PathtracingMesh(float4x4 viewMatrix, float4x4 projectionMatrix, int Height, int Width )
         {
             Texture2D texture = new Texture2D(Width , Height);
+           
             var scene = Set();
 
+            var sphereModel = Raycasting.UnitarySphere.AttributesMap(
+                a => new PositionNormalCoordinate { 
+                    Position = a, 
+                    Coordinates = float2(atan2(a.z, a.x) * 0.5f / pi + 0.5f, a.y), 
+                    Normal = normalize(a) 
+                });
+                scene.Add(sphereModel, new Material
+                {
+                    Emissive = LightIntensity / (4 * pi), // power per unit area
+                    WeightDiffuse = 0,
+                    WeightFresnel = 1.0f, // Glass sphere
+                    RefractionIndex = 1.0f
+                },
+                mul(Transforms.Scale(2.4f, 0.4f, 2.4f), Transforms.Translate(LightPosition)));
+ 
+            var ray = PathtracingSet.Def(scene, LightPosition, LightIntensity);
+            
+
+            
             int pass = 0;
             while (true)
             {
-                Console.Write("Pass: " + pass);
-                PathtracingSet.Init(scene,texture,pass, viewMatrix, projectionMatrix, LightPosition, LightIntensity);
+                Console.WriteLine("Pass: " + pass);
+                PathtracingSet.Init(scene, texture, pass, viewMatrix, projectionMatrix, ray);   
                 texture.Save("test.rbm");
-                Console.WriteLine();
                 pass++;
             }
             

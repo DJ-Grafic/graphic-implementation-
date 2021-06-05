@@ -202,6 +202,13 @@ namespace Rendering
                 mesh.Vertices[i].Normal = normalize(normals[i]);
         }
 
+        public static void InverterNormals<V>(this Mesh<V> mesh) where V:struct, INormalVertex<V>
+        {
+            // Update per-vertex normal using normal accumulation normalized.
+            for (int i = 0; i < mesh.Vertices.Length; i++)
+                mesh.Vertices[i].Normal *= -1;
+        }
+
         /// <summary>
         /// Computes the Axis-aligned boundary box of the mesh using the vertex positions.
         /// </summary>

@@ -9,3 +9,6 @@ print:
 
 draw: print	
 	xdg-open dj_graphic.png
+
+result:
+	python3 imageviewer.py test1.rbm

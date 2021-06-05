@@ -10,9 +10,9 @@ namespace DJGraphic
     {
         public static float4x4 Transform()
         {
-            float4x4 result = Transforms.Scale(4,1.5f,0.2f);
+            float4x4 result = Transforms.Scale(8, 3f,0.2f);
             result = mul(result, Transforms.RotateZGrad(-20));
-            result = mul(result, Transforms.Translate(0.15f, -2.4f, 0f));
+            result = mul(result, Transforms.Translate(0.15f, -0.2f, -1.4f));
             
             return result;
         }

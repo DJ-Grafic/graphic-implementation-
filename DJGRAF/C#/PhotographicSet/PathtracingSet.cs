@@ -6,103 +6,174 @@ using static GMath.Gfx;
 
 namespace DJGraphic
 {   
-    public static class PathtracingSet
+    public partial class Pathtracing
     {
-
-        public static Raytracer<PTRayPayload, PositionNormalCoordinate, Material> Def(
-            Scene<PositionNormalCoordinate, Material> scene,
-            float3 LightPosition, float3 LightIntensity)
+        public void Scene()
         {
-            Raytracer<PTRayPayload, PositionNormalCoordinate, Material> raycaster = 
-                new Raytracer<PTRayPayload, PositionNormalCoordinate, Material>();
+            scene = new Scene<PositionNormalCoordinate, Material>();
+            Texture2D planeTexture = Texture2D.LoadFromFile("../teachingImplentation/apkwood.jpg");
+            Texture2D towerTexture = Texture2D.LoadFromFile("../teachingImplentation/textil.jpg");
+
+            light(scene, LightIntensity, LightPosition);
+
+            planeXY(scene, planeTexture);
+            planeXZ(scene, planeTexture);
             
-            RayTracerOnClosesHit(raycaster,scene, LightPosition, LightIntensity);
-            raycaster.OnMiss += delegate (IRaycastContext context, ref PTRayPayload payload)
-            {
-                payload.Color = float3(0, 0, 0); // Blue, as the sky.
-            };
+            glass1(scene);
+            //water1(scene);
+            //for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
 
-            return raycaster;
+            //glass2(scene);
+            //water2(scene);
+            //for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
+            //clown(scene, towerTexture);
+
+            //jar(scene);
+            //flow(scene);
+       
         }
 
-        public static void Init(
-            Scene<PositionNormalCoordinate, Material> scene,
-            Texture2D texture, int pass, 
-            float4x4 viewMatrix, float4x4 projectionMatrix, 
-            Raytracer<PTRayPayload, PositionNormalCoordinate, Material> raycaster)
-        {
 
-
-
-                  /// Render all points of the screen
-            for (int px = 0; px < texture.Width; px++)
-                for (int py = 0; py < texture.Height; py++)
+//////////////////////////////// Light //////////////////////////////////////////////////////////// 
+        static Action<Scene<PositionNormalCoordinate, Material>> light = 
+        (scene, LightIntensity, LightPosition) => {
+            var sphereModel = Raycasting.UnitarySphere.AttributesMap(
+                a => new PositionNormalCoordinate { 
+                    Position = a, 
+                    Coordinates = float2(atan2(a.z, a.x) * 0.5f / pi + 0.5f, a.y), 
+                    Normal = normalize(a) 
+                });
+            scene.Add(sphereModel, new Material
                 {
-                    int progress = (px * texture.Height + py);
-                    if (progress % 10000 == 0)
-                    {
-                        Console.Write("\r" + progress * 100 / (float)(texture.Width * texture.Height) + "%            ");
-                    }
+                    Emissive = LightIntensity / (4 * pi), // power per unit area
+                    WeightDiffuse = 0,
+                    WeightFresnel = 1.0f, // Glass sphere
+                    RefractionIndex = 1.0f
+                },
+                mul(Transforms.Scale(2.4f, 0.4f, 2.4f), Transforms.Translate(LightPosition)));
+        };
+            
 
-                    RayDescription ray = RayDescription.FromScreen(px + 0.5f, py + 0.5f, texture.Width, texture.Height, inverse(viewMatrix), inverse(projectionMatrix), 0, 1000);
+//////////////////////////////// Planes //////////////////////////////////////////////////////////// 
+        static Action<Scene<PositionNormalCoordinate, Material>, Texture2D> planeXY = 
+        (scene, planeTexture) => {
+            scene.Add(
+                WoodPlane<PositionNormalCoordinate>.XY(), 
+                ModelMaterial.Texture(planeTexture),
+                Transforms.Translate(0,0,-1.35f));
+        };
 
-                    float4 accum = texture.Read(px, py) * pass;
-                    PTRayPayload coloring = new PTRayPayload();
-                    coloring.Importance = float3(1, 1, 1);
-                    coloring.Bounces = 3;
+        static Action<Scene<PositionNormalCoordinate, Material>, Texture2D> planeXZ = 
+        (scene, planeTexture) => {
+            scene.Add(
+                WoodPlane<PositionNormalCoordinate>.XZ(), 
+                ModelMaterial.Texture(planeTexture),
+                Transforms.Translate(0,7,0));
+        };
 
-                    raycaster.Trace(scene, ray, ref coloring);
+        static Action<Scene<PositionNormalCoordinate, Material>, Texture2D> clown = 
+        (scene, planeTexture) => {
+            var clown = Clown<PositionNormalCoordinate>.Mesh().Weld();
+            clown.ComputeNormals();
+            clown.InverterNormals();
+            scene.Add(
+                clown.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Texture(planeTexture),
+                Clown<PositionNormalCoordinate>.Transform());
+        };
 
-                    texture.Write(px, py, float4((accum.xyz + coloring.Color) / (pass + 1), 1));
-                }
+//////////////////////////////// Glass //////////////////////////////////////////////////////////// 
+        static Action<Scene<PositionNormalCoordinate, Material>> glass1 = 
+        (scene) => {
+            var glass1 = GlassOfWater<PositionNormalCoordinate>.Mesh(0.5f).Weld();
+            glass1.ComputeNormals();
+            scene.Add(
+                glass1.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                GlassOfWater<PositionNormalCoordinate>.Transform1()
+            );
+        };
 
-        }
+        static Action<Scene<PositionNormalCoordinate, Material>> glass2 = 
+        (scene) => {
+            var glass2 = GlassOfWater<PositionNormalCoordinate>.Mesh(0.5f).Weld();
+            glass2.ComputeNormals();
+            scene.Add(
+                glass2.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                GlassOfWater<PositionNormalCoordinate>.Transform2()
+            );
+        };
 
-        public static void RayTracerOnClosesHit(Raytracer<PTRayPayload, PositionNormalCoordinate, Material> raycaster, 
-            Scene<PositionNormalCoordinate, Material> scene,
-            float3 LightPosition, float3 LightIntensity)
-        {
-            raycaster.OnClosestHit += delegate (IRaycastContext context, PositionNormalCoordinate attribute, Material material, ref PTRayPayload payload)
-            {
-                // Move geometry attribute to world space
-                attribute = attribute.Transform(context.FromGeometryToWorld);
+        static Action<Scene<PositionNormalCoordinate, Material>> jar = 
+        (scene) => {
+            var jar = JarOfWater<PositionNormalCoordinate>.Mesh().Weld();
+            jar.ComputeNormals();
+            jar.InverterNormals();
+            scene.Add(
+                jar.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                JarOfWater<PositionNormalCoordinate>.Transform()
+            );
+        };
+//////////////////////////////// Waters //////////////////////////////////////////////////////////// 
+        static Action<Scene<PositionNormalCoordinate, Material>> water1 = 
+        (scene) => {
+            var water = Waters<PositionNormalCoordinate>.MeshInGlass().Weld();
+            water.ComputeNormals();
+            water.InverterNormals();
+            scene.Add(
+                water.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Water, 
+                Waters<PositionNormalCoordinate>.TransformInGlass1()
+            );
+        };
 
-                float3 V = -normalize(context.GlobalRay.Direction);
+        static Action<Scene<PositionNormalCoordinate, Material>> water2 = 
+        (scene) => {
+            var water = Waters<PositionNormalCoordinate>.MeshInGlass(false).Weld();
+            water.ComputeNormals();
+            water.InverterNormals();
+            scene.Add(
+                water.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Water, 
+                Waters<PositionNormalCoordinate>.TransformInGlass2()
+            );
+        };
 
-                attribute.Normal = normalize(attribute.Normal);
+        static Action<Scene<PositionNormalCoordinate, Material>> flow = 
+        (scene) => {
+            var water = Waters<PositionNormalCoordinate>.MeshFlow().Weld();
+            water.ComputeNormals();
+            water.InverterNormals();
+            scene.Add(
+                water.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Water, 
+                Waters<PositionNormalCoordinate>.TransformFlow()
+            );
+        };
 
-                if (material.BumpMap != null)
-                {
-                    float3 T, B;
-                    createOrthoBasis(attribute.Normal, out T, out B);
-                    float3 tangentBump = material.BumpMap.Sample(material.TextureSampler, attribute.Coordinates).xyz * 2 - 1;
-                    float3 globalBump = tangentBump.x * T + tangentBump.y * B + tangentBump.z * attribute.Normal;
-                    attribute.Normal = globalBump;// normalize(attribute.Normal + globalBump * 5f);
-                }
+        static Action<Scene<PositionNormalCoordinate, Material>, float, float, float> bubble = 
+        (scene, a, b, y) => {
+            var sphereModel = Raycasting.UnitarySphere.AttributesMap(
+                a => new PositionNormalCoordinate { 
+                    Position = a, 
+                    Coordinates = float2(atan2(a.z, a.x) * 0.5f / pi + 0.5f, a.y), 
+                    Normal = normalize(a) });
 
-                ScatteredRay outgoing = material.Scatter(attribute, V);
 
-                float lambertFactor = max(0, dot(attribute.Normal, outgoing.Direction));
+            float size = random() * 0.03f + 0.03f;
+            float x = random() * (b-a)  + a;
+            float z = random() * -1.65f + 0.25f;
 
-                payload.Color += payload.Importance * material.Emissive;
-                
-                // Recursive calls for indirect light due to reflections and refractions
-                if (payload.Bounces > 0)
-                {
-                    float3 D = outgoing.Direction; // recursive direction to check
-                    float3 facedNormal = dot(D, attribute.Normal) > 0 ? attribute.Normal : -attribute.Normal; // normal respect to direction
+            scene.Add(
+                sphereModel, 
+                ModelMaterial.Mirror, 
+                mul(Transforms.Scale(size, size, size), Transforms.Translate(x, y, z))
+            );
+        };
 
-                    RayDescription ray = new RayDescription { Direction = D, Origin = attribute.Position + facedNormal * 0.001f, MinT = 0.0001f, MaxT = 10000 };
-
-                    payload.Importance *= outgoing.Ratio / outgoing.PDF;
-                    payload.Bounces--;
-
-                    raycaster.Trace(scene, ray, ref payload);
-                }
-            };
-        }
- 
-
+            
     }
     
 }

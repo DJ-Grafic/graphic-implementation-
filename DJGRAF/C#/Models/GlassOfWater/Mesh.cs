@@ -27,7 +27,7 @@ namespace DJGraphic
 
                 float3(size, size ,  0.5f), 
                 float3(size, size ,  0.9f), // height
-                float3(size - 0.1f, size ,  0.5f), 
+                float3(size - 0.08f, size - 0.08f ,  0.5f), 
 
                 float3(size + 0.6f, size + 0.6f, 0f ), // top contourn
 
@@ -35,11 +35,11 @@ namespace DJGraphic
 
                 float3(size + 0.1f, size + 0.01f , -0.1f ), // bottom contourn
 
-                float3(size, size , -1.2f), //inter circe base
-                float3(size, size , -1.2f), //inter circe base
-                float3(size, size , -1.2f), //inter circe base
-                float3(size, size , -1.2f), //inter circe base
-                float3(size, size , -1.2f), //inter circe base
+                float3(size, size , -1.25f), //inter circe base
+                float3(size, size , -1.25f), //inter circe base
+                float3(size, size , -1.25f), //inter circe base
+                float3(size, size , -1.25f), //inter circe base
+                float3(size, size , -1.25f), //inter circe base
                 float3(0f, 0f , -1.2f), 
                
             };

@@ -35,7 +35,11 @@ namespace DJGraphic
 
 
 //////////////////////////////// Light //////////////////////////////////////////////////////////// 
+<<<<<<< HEAD
         static Action<Scene<PositionNormalCoordinate, Material>, float3, float3> light = 
+=======
+        static Action<Scene<PositionNormalCoordinate, Material>> light = 
+>>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         (scene, LightIntensity, LightPosition) => {
             var sphereModel = Raycasting.UnitarySphere.AttributesMap(
                 a => new PositionNormalCoordinate { 

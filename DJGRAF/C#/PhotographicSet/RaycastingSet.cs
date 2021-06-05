@@ -17,6 +17,7 @@ namespace DJGraphic
             planeXY(scene, planeTexture);
             planeXZ(scene, planeTexture);
             
+<<<<<<< HEAD
             //glass1(scene);
             //water1(scene);
             //for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
@@ -29,6 +30,20 @@ namespace DJGraphic
             jar(scene);
             flow(scene);
             water3(scene);       
+=======
+            glass1(scene);
+            water1(scene);
+            for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
+
+            glass2(scene);
+            water2(scene);
+            for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
+            clown(scene, towerTexture);
+
+            jar(scene);
+            flow(scene);
+       
+>>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         }
 
 //////////////////////////////// Planes //////////////////////////////////////////////////////////// 
@@ -118,6 +133,7 @@ namespace DJGraphic
             );
         };
 
+<<<<<<< HEAD
         static Action<Scene<PositionNormalCoordinate, Material>> water3 = 
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
@@ -130,6 +146,8 @@ namespace DJGraphic
             );
         };
 
+=======
+>>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         static Action<Scene<PositionNormalCoordinate, Material>> flow = 
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshFlow().Weld();

@@ -10,8 +10,13 @@ namespace DJGraphic
     class Program
     {
         static float3 CameraPosition = float3(0, -4.5f, 1.1f);
+<<<<<<< HEAD
         //static float3[] LightPosition = new float3[] { float3(3, -2, 3.5f), float3(0, 0, 3.5f) };
         static float3[] LightPosition = new float3[] {float3(0, 0, 3.5f) };
+=======
+        static float3[] LightPosition = new float3[] { float3(3, -2, 3.5f), float3(0, 0, 3.5f) };
+        //static float3[] LightPosition = new float3[] {float3(3, -2, 3f) };
+>>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         static float3 LightIntensity = float3(1, 1, 1) * 200;
 
         static void Main(string[] args)
@@ -62,9 +67,14 @@ namespace DJGraphic
                 viewMatrix = viewMatrix, 
                 projectionMatrix = projectionMatrix, 
                 Bounces = 8,
+<<<<<<< HEAD
             };
 
             patht.Scene();  
+=======
+            }
+                
+>>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
             int pass = 0;
             while (true)
             {

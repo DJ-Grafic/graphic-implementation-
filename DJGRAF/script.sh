@@ -4,10 +4,10 @@ cd C#
 
 dotnet run 
 
-mv test1.rbm ../
+mv test.rbm ../
 
 cd ..
 
-python3 imageviewer.py test1.rbm
+python3 imageviewer.py test.rbm
 
 xdg-open dj_graphic.png

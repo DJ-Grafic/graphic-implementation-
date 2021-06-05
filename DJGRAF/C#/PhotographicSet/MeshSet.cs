@@ -23,17 +23,17 @@ namespace DJGraphic
             jar = jar.ConvertTo(Topology.Lines);
             jar = jar.Transform(JarOfWater<V>.Transform());
 
-            var water = Waters<V>.Mesh();
+            var flow = Waters<V>.MeshFlow();
+            flow = flow.ConvertTo(Topology.Lines);
+            flow = flow.Transform(Waters<V>.TransformFlow());
+            
+            var water = Waters<V>.MeshInGlass();
             water = water.ConvertTo(Topology.Lines);
-			water = water.Transform(Waters<V>.Transform());
+			water = water.Transform(Waters<V>.TransformInGlass1());
 
-            var water1 = Waters<V>.MeshGlass(0.5f);
-            water1 = water1.ConvertTo(Topology.Lines);
-			water1 = water1.Transform(Waters<V>.Transform1());
-
-            var water2 = Waters<V>.MeshGlass(0.5f);
+            var water2 = Waters<V>.MeshInGlass(false);
             water2 = water2.ConvertTo(Topology.Lines);
-			water2 = water2.Transform(Waters<V>.Transform2());
+			water2 = water2.Transform(Waters<V>.TransformInGlass2());
 
             var clown = Clown<V>.Mesh();
             clown = clown.ConvertTo(Topology.Lines);
@@ -41,7 +41,7 @@ namespace DJGraphic
 
             var test = Waters<V>.MeshTest();
             test = test.ConvertTo(Topology.Lines);
-            //test = test.Transform(Waters<V>.TransformT());
+            test = test.Transform(Waters<V>.TransforT());
 
 			// Define a vertex shader that projects a vertex into the NDC.
             render.VertexShader = v =>
@@ -59,17 +59,18 @@ namespace DJGraphic
             };
             // Draw the mesh.
 
-            //render.DrawMesh(test);
+            render.DrawMesh(test);
 
-            render.DrawMesh(glass1);
-            //render.DrawMesh(water1);
+            //render.DrawMesh(glass1);
+            //render.DrawMesh(water);
 
             //render.DrawMesh(glass2);
             //render.DrawMesh(water2);
             //render.DrawMesh(clown);
 
-            //render.DrawMesh(jar);
-            //render.DrawMesh(water);
+            render.DrawMesh(jar);
+            render.DrawMesh(flow);
+
 
         }
 

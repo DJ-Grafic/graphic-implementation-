@@ -8,26 +8,25 @@ namespace DJGraphic
 {
     static partial class Waters<T>
     {
-        public static float4x4 Transform()
+        public static float4x4 TransformInGlass1()
         {
-            float4x4 result = Transforms.Scale(1f, 1f, 1.3f);
-            result = mul(result, Transforms.RotateYGrad(75));
+            float4x4 result = Transforms.Scale(1.2f, 1.2f, 1.5f);
+            result = mul(result, Transforms.Translate(-0.8f, -0.35f, 0.4f));
+            return result;
+        }
+
+        public static float4x4 TransformInGlass2()
+        {
+            float4x4 result = Transforms.Scale(1.2f, 1.2f, 1.5f);
+            result = mul(result, Transforms.Translate(1.8f, 1.2f, 0.6f));
+            return result;
+        }
+
+        public static float4x4 TransformFlow()
+        {
+            float4x4 result = Transforms.Scale(1, 1, 1);
             result = mul(result, Transforms.RotateZGrad(6));
-            result = mul(result, Transforms.Translate(-2.5f, -0.35f, 2.2f));
-
-            return result;
-        }
-        public static float4x4 Transform1()
-        {
-            float4x4 result = Transforms.Scale(0.68f, 0.68f, 1.5f);
-            result = mul(result, Transforms.Translate(-0.7f, -0.35f, 0.7f));
-            return result;
-        }
-
-        public static float4x4 Transform2()
-        {
-            float4x4 result = Transforms.Scale(0.68f, 0.68f, 1.5f);
-            result = mul(result, Transforms.Translate(1.75f, 1f, 0.8f));
+            result = mul(result, Transforms.Translate(-0.9f, -0.35f, 0.65f));
             return result;
         }
 

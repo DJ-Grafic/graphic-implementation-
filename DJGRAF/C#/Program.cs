@@ -10,19 +10,15 @@ namespace DJGraphic
     class Program
     {
         static float3 CameraPosition = float3(0, -4.5f, 1.1f);
-<<<<<<< HEAD
-        //static float3[] LightPosition = new float3[] { float3(3, -2, 3.5f), float3(0, 0, 3.5f) };
-        static float3[] LightPosition = new float3[] {float3(0, 0, 3.5f) };
-=======
-        static float3[] LightPosition = new float3[] { float3(3, -2, 3.5f), float3(0, 0, 3.5f) };
-        //static float3[] LightPosition = new float3[] {float3(3, -2, 3f) };
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
-        static float3 LightIntensity = float3(1, 1, 1) * 200;
+        static float3[] LightPosition = new float3[] { float3(0, -2, 4f), float3(-2, -2, 4f), float3(3, -2, 4f) };
+        //static float3[] LightPosition = new float3[] {float3(-2, -2, 4f) };
+
+        static float3 LightIntensity = float3(1, 1, 1) * 500;
 
         static void Main(string[] args)
         {
-            int Height = 512;
-            int Width  = 512;
+            int Height = 1024;
+            int Width  = 1024 + 512;
 
             float4x4 viewMatrix = Transforms.LookAtLH(CameraPosition , float3(0, 0, 0), float3(0, 0, 1));
             float4x4 projectionMatrix = Transforms.PerspectiveFovLH(
@@ -30,8 +26,8 @@ namespace DJGraphic
     
             
             //Mesh(viewMatrix, projectionMatrix, Height, Width);
-            RaycastingMesh(viewMatrix, projectionMatrix, Height, Width);
-            //PathtracingMesh(viewMatrix, projectionMatrix, Height, Width);
+            //RaycastingMesh(viewMatrix, projectionMatrix, Height, Width);
+            PathtracingMesh(viewMatrix, projectionMatrix, Height, Width);
         }
         
 
@@ -67,14 +63,11 @@ namespace DJGraphic
                 viewMatrix = viewMatrix, 
                 projectionMatrix = projectionMatrix, 
                 Bounces = 8,
-<<<<<<< HEAD
+
             };
 
             patht.Scene();  
-=======
-            }
-                
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
+
             int pass = 0;
             while (true)
             {

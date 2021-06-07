@@ -42,6 +42,48 @@ namespace DJGraphic
             var result = Manifold<T>.Revolution(30, 30, t => Tools.EvalBezier(contourn, t), float3(0, 0, 1));
             return result;
         }
+
+        public static Mesh<T> MeshFront(float size = 0.5f)
+        {
+            float3[] contourn =
+            {
+                float3(0, 0 , -0.8f), // base
+
+                float3(2f, size ,-0.6f), // bottom size 
+                float3(1.3f, size , -0.5f ), 
+                float3(1.3f, size , -0.2f ), // bottom contourn
+
+                float3(0.7f, size , 0.5f), // inflexion contourn  
+                
+                float3( 1f, size , 0.8f), // top contourn
+
+                float3( 1.2f, size , 1f) //height 
+
+            };
+            var result = Manifold<T>.Revolution(30, 30, t => Tools.EvalBezier(contourn, t), float3(0, 0, 1));
+            return result;
+        }
+
+        public static Mesh<T> MeshBack(float size = 0.5f)
+        {
+            float3[] contourn =
+            {
+                float3(0, 0 , -0.7f), // base
+
+                float3(1.9f, size ,-0.6f), // bottom size 
+                float3(1.2f, size , -0.5f ), 
+                float3(1.2f, size , -0.2f ), // bottom contourn
+
+                float3(0.6f, size , 0.5f), // inflexion contourn  
+                
+                float3( 0.9f, size , 0.8f), // top contourn
+
+                float3( 1.2f, size , 1f) //height 
+
+            };
+            var result = Manifold<T>.Revolution(30, 30, t => Tools.EvalBezier(contourn, t), float3(0, 0, 1));
+            return result;
+        }
     }
 
 }

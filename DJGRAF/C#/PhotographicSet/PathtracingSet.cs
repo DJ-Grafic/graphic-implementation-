@@ -20,26 +20,24 @@ namespace DJGraphic
             planeXZ(scene, planeTexture);
             
             glass1(scene);
-            //water1(scene);
+            water1(scene);
             //for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
 
-            //glass2(scene);
-            //water2(scene);
+            glass2(scene);
+            water2(scene);
             //for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
             //clown(scene, towerTexture);
 
-            //jar(scene);
-            //flow(scene);
+            jar(scene);
+            flow(scene);
+            water3(scene);
        
         }
 
 
 //////////////////////////////// Light //////////////////////////////////////////////////////////// 
-<<<<<<< HEAD
         static Action<Scene<PositionNormalCoordinate, Material>, float3, float3> light = 
-=======
-        static Action<Scene<PositionNormalCoordinate, Material>> light = 
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
+
         (scene, LightIntensity, LightPosition) => {
             var sphereModel = Raycasting.UnitarySphere.AttributesMap(
                 a => new PositionNormalCoordinate { 
@@ -54,7 +52,7 @@ namespace DJGraphic
                     WeightFresnel = 1.0f, // Glass sphere
                     RefractionIndex = 1.0f
                 },
-                mul(Transforms.Scale(2.4f, 0.4f, 2.4f), Transforms.Translate(LightPosition)));
+                mul(Transforms.Scale(3f, 3f, 0.5f), Transforms.Translate(LightPosition)));
         };
             
 
@@ -142,6 +140,18 @@ namespace DJGraphic
                 water.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Water, 
                 Waters<PositionNormalCoordinate>.TransformInGlass2()
+            );
+        };
+
+        static Action<Scene<PositionNormalCoordinate, Material>> water3 = 
+        (scene) => {
+            var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
+            water.ComputeNormals();
+            water.InverterNormals();
+            scene.Add(
+                water.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Water, 
+                Waters<PositionNormalCoordinate>.TransforT()
             );
         };
 

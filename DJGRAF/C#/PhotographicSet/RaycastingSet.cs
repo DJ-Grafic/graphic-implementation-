@@ -17,33 +17,20 @@ namespace DJGraphic
             planeXY(scene, planeTexture);
             planeXZ(scene, planeTexture);
             
-<<<<<<< HEAD
-            //glass1(scene);
-            //water1(scene);
-            //for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
+            glass1(scene);
+            water1(scene);
+            for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
 
             //glass2(scene);
             //water2(scene);
             //for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
             //clown(scene, towerTexture);
 
-            jar(scene);
-            flow(scene);
-            water3(scene);       
-=======
-            glass1(scene);
-            water1(scene);
-            for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
+            //jarfront(scene);
+            //jar(scene);
+            //flow(scene);
+            //water3(scene);       
 
-            glass2(scene);
-            water2(scene);
-            for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
-            clown(scene, towerTexture);
-
-            jar(scene);
-            flow(scene);
-       
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         }
 
 //////////////////////////////// Planes //////////////////////////////////////////////////////////// 
@@ -70,7 +57,7 @@ namespace DJGraphic
             clown.InverterNormals();
             scene.Add(
                 clown.AsRaycast(RaycastingMeshMode.Grid), 
-                ModelMaterial.Texture(planeTexture),
+                ModelMaterial.Diffuse, //Texture(planeTexture),
                 Clown<PositionNormalCoordinate>.Transform());
         };
 
@@ -108,6 +95,27 @@ namespace DJGraphic
                 JarOfWater<PositionNormalCoordinate>.Transform()
             );
         };
+        static Action<Scene<PositionNormalCoordinate, Material>> jarfront = 
+        (scene) => {
+            var jar = JarOfWater<PositionNormalCoordinate>.MeshFront().Weld();
+            jar.ComputeNormals();
+            jar.InverterNormals();
+            scene.Add(
+                jar.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                JarOfWater<PositionNormalCoordinate>.Transform()
+            );
+        };
+        static Action<Scene<PositionNormalCoordinate, Material>> jarback = 
+        (scene) => {
+            var jar = JarOfWater<PositionNormalCoordinate>.MeshBack().Weld();
+            jar.ComputeNormals();
+            scene.Add(
+                jar.AsRaycast(RaycastingMeshMode.Grid), 
+                ModelMaterial.Glass, 
+                JarOfWater<PositionNormalCoordinate>.Transform()
+            );
+        };
 //////////////////////////////// Waters //////////////////////////////////////////////////////////// 
         static Action<Scene<PositionNormalCoordinate, Material>> water1 = 
         (scene) => {
@@ -133,7 +141,6 @@ namespace DJGraphic
             );
         };
 
-<<<<<<< HEAD
         static Action<Scene<PositionNormalCoordinate, Material>> water3 = 
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
@@ -146,8 +153,6 @@ namespace DJGraphic
             );
         };
 
-=======
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
         static Action<Scene<PositionNormalCoordinate, Material>> flow = 
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshFlow().Weld();
@@ -175,7 +180,7 @@ namespace DJGraphic
 
             scene.Add(
                 sphereModel, 
-                ModelMaterial.Mirror, 
+                ModelMaterial.Bubble, 
                 mul(Transforms.Scale(size, size, size), Transforms.Translate(x, y, z))
             );
         };

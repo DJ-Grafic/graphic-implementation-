@@ -22,6 +22,10 @@ namespace DJGraphic
             var jar = JarOfWater<V>.Mesh();
             jar = jar.ConvertTo(Topology.Lines);
             jar = jar.Transform(JarOfWater<V>.Transform());
+            
+            var jarb = JarOfWater<V>.MeshBack();
+            jarb = jarb.ConvertTo(Topology.Lines);
+            jarb = jarb.Transform(JarOfWater<V>.Transform());
 
             var flow = Waters<V>.MeshFlow();
             flow = flow.ConvertTo(Topology.Lines);
@@ -39,13 +43,10 @@ namespace DJGraphic
             clown = clown.ConvertTo(Topology.Lines);
 			clown = clown.Transform(Clown<V>.Transform());
 
-<<<<<<< HEAD
             var test = Waters<V>.MeshTest();
             test = test.ConvertTo(Topology.Lines);
             test = test.Transform(Waters<V>.TransforT());
-=======
-            
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
+
 
 			// Define a vertex shader that projects a vertex into the NDC.
             render.VertexShader = v =>
@@ -63,29 +64,20 @@ namespace DJGraphic
             };
             // Draw the mesh.
 
-            render.DrawMesh(test);
+            //render.DrawMesh(test);
 
-<<<<<<< HEAD
             //render.DrawMesh(glass1);
             //render.DrawMesh(water);
-=======
-            render.DrawMesh(glass1);
-            render.DrawMesh(water);
 
-            render.DrawMesh(glass2);
-            render.DrawMesh(water2);
-            render.DrawMesh(clown);
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
+            //render.DrawMesh(glass2);
+            //render.DrawMesh(water2);
+            //render.DrawMesh(clown);
+
 
             render.DrawMesh(jar);
-            render.DrawMesh(flow);
+            //render.DrawMesh(jarb);
+            //render.DrawMesh(flow);
 
-<<<<<<< HEAD
-            render.DrawMesh(jar);
-            render.DrawMesh(flow);
-
-=======
->>>>>>> 63005a6d36cd2b474ea63df6d27ad9198ca68520
 
         }
 

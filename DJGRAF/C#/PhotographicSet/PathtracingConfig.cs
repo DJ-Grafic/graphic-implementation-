@@ -73,7 +73,7 @@ namespace DJGraphic
 
                 ScatteredRay outgoing = material.Scatter(attribute, V);
 
-                float lambertFactor = max(0, dot(attribute.Normal, outgoing.Direction));
+                float lambertFactor = abs(dot(attribute.Normal, outgoing.Direction));
 
                 payload.Color += payload.Importance * material.Emissive;
                 
@@ -85,7 +85,7 @@ namespace DJGraphic
 
                     RayDescription ray = new RayDescription { Direction = D, Origin = attribute.Position + facedNormal * 0.001f, MinT = 0.0001f, MaxT = 10000 };
 
-                    payload.Importance *= outgoing.Ratio / outgoing.PDF;
+                    payload.Importance *= outgoing.Ratio * lambertFactor / outgoing.PDF;
                     payload.Bounces--;
 
                     raycaster.Trace(scene, ray, ref payload);

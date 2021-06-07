@@ -109,7 +109,7 @@ namespace DJGraphic
                     attribute.Normal = globalBump;// normalize(attribute.Normal + globalBump * 5f);
                 }
 
-                float lambertFactor = max(0, dot(attribute.Normal, L));
+                float lambertFactor = abs(dot(attribute.Normal, L));
 
                 // Check ray to light...
                 ShadowRayPayload shadow = new ShadowRayPayload();

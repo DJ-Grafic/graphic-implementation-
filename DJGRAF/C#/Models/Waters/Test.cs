@@ -22,6 +22,7 @@ namespace DJGraphic
                 float3(0.7f,-0.5f,1),
                 float3(1.1f,-0.5f,1.1f),
             };
+            
             Func<float, float, float3> func = (u, v) => {
                 float3 x = float3(1,0,0) * (random() * 0.1f - 0.05f); 
                 return (Tools.EvalBezier(contourn, u)) * (1-v) + (Tools.EvalBezier(contourn1, u)) * v + x;

@@ -91,14 +91,14 @@ namespace Rendering
                     yield return new Impulse
                     {
                         Direction = R,
-                        Ratio = Specular * (WeightMirror + WeightFresnel * F) / WeightNormalization / NdotL
+                        Ratio = Specular * (WeightMirror + WeightFresnel * F) / WeightNormalization /// NdotL
                     };
 
                 if (WeightFresnel * (1 - F) > 0) // something to refract
                     yield return new Impulse
                     {
                         Direction = T,
-                        Ratio = Specular * WeightFresnel * (1 - F) / WeightNormalization / -dot(surfel.Normal, T)
+                        Ratio = Specular * WeightFresnel * (1 - F) / WeightNormalization /// -dot(surfel.Normal, T)
                     };
             }
 

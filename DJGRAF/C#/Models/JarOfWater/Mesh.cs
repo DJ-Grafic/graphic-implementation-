@@ -26,8 +26,8 @@ namespace DJGraphic
 
                 float3( 2.6f, size , 2f), //height 
 
-                float3( 1f - 0.05f, size -0.05f , 0.85f),
-                float3( 1f - 0.05f, size -0.05f , 0.8f), // top contourn
+                float3( 1f - 0.1f, size -0.1f , 0.85f),
+                float3( 1f - 0.1f, size -0.1f , 0.8f), // top contourn
 
                 float3(-0.15f, size - 0.05f , 0.7f),// inflexion contourn
 

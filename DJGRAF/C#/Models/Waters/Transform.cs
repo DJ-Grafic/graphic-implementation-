@@ -18,7 +18,7 @@ namespace DJGraphic
         public static float4x4 TransformInGlass2()
         {
             float4x4 result = Transforms.Scale(1.2f, 1.2f, 1.5f);
-            result = mul(result, Transforms.Translate(1.8f, 1.2f, 0.6f));
+            result = mul(result, Transforms.Translate(1.8f, 1.2f, 0.5f));
             return result;
         }
 

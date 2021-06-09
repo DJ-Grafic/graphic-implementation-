@@ -21,12 +21,12 @@ namespace DJGraphic
             
             glass1(scene);
             water1(scene);
-            //for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
+            for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
 
             glass2(scene);
             water2(scene);
-            //for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
-            //clown(scene, towerTexture);
+            for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
+            clown(scene, towerTexture);
 
             jar(scene);
             flow(scene);
@@ -52,7 +52,7 @@ namespace DJGraphic
                     WeightFresnel = 1.0f, // Glass sphere
                     RefractionIndex = 1.0f
                 },
-                mul(Transforms.Scale(3f, 3f, 0.5f), Transforms.Translate(LightPosition)));
+                mul(Transforms.Scale(5f, 6f, 0.5f), Transforms.Translate(LightPosition)));
         };
             
 
@@ -111,7 +111,6 @@ namespace DJGraphic
         (scene) => {
             var jar = JarOfWater<PositionNormalCoordinate>.Mesh().Weld();
             jar.ComputeNormals();
-            jar.InverterNormals();
             scene.Add(
                 jar.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Glass, 
@@ -147,7 +146,6 @@ namespace DJGraphic
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
             water.ComputeNormals();
-            water.InverterNormals();
             scene.Add(
                 water.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Water, 
@@ -178,7 +176,7 @@ namespace DJGraphic
 
             float size = random() * 0.03f + 0.03f;
             float x = random() * (b-a)  + a;
-            float z = random() * -1.65f + 0.25f;
+            float z = random() * -1.45f + 0.25f;
 
             scene.Add(
                 sphereModel, 

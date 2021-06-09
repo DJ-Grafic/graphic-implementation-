@@ -24,7 +24,7 @@ namespace DJGraphic
             };
             
             Func<float, float, float3> func = (u, v) => {
-                float3 x = float3(1,0,0) * (random() * 0.1f - 0.05f); 
+                float3 x = float3(1,0,0) * (random() * 0.05f - 0.25f); 
                 return (Tools.EvalBezier(contourn, u)) * (1-v) + (Tools.EvalBezier(contourn1, u)) * v + x;
             };
             var result = Manifold<T>.Surface(30,30, func );

@@ -18,6 +18,7 @@ namespace DJGraphic
             RefractionIndex = 1.6f
         };
 
+
         public static Material LightSource(float3 LightIntensity) => new Material
         {
             Emissive = LightIntensity / (4 * pi), // power per unit area
@@ -65,20 +66,26 @@ namespace DJGraphic
             RefractionIndex = 1.3f
         };
 
+
+
         public static Material Bubble = new Material
         {
-            //Specular = float3(1, 1, 1)*0.1f,
-            //SpecularPower = 60,
-            //Diffuse = float3(0.7f, 0.9f, 1f),
 
-            Emissive = 0.5f, // power per unit area
-            Diffuse = float3(1, 1, 1),
             Specular = float3(1, 1, 1),
-            SpecularPower = 260,
+            SpecularPower = 100,
 
-            //WeightDiffuse = 0.3f,
-            WeightFresnel = 1f, // Glass sphere
-            RefractionIndex = 1.3f
+            WeightDiffuse = 0,
+            WeightFresnel = 1.0f, // Glass sphere
+            RefractionIndex = 1.6f,
+
+            //Emissive = 0.1f, // power per unit area
+            //Diffuse = float3(1, 1, 1),
+            //Specular = float3(1, 1, 1),
+            //SpecularPower = 1000,
+
+            //WeightDiffuse = 0.4f,
+            //WeightFresnel = 0.6f, // Glass sphere
+            //RefractionIndex = 1.4f
         };
 
 

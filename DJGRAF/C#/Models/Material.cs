@@ -10,7 +10,7 @@ namespace DJGraphic
     {
         public static Material Glass = new Material
         {
-            Specular = float3(0.95f, 0.97f, 1),
+            Specular = float3(227/255f, 242/255f, 253/255f),
             SpecularPower = 260,
 
             WeightDiffuse = 0,
@@ -18,6 +18,16 @@ namespace DJGraphic
             RefractionIndex = 1.6f
         };
 
+        public static Material Glass1 = new Material
+        {
+            Specular = float3(227/255f, 242/255f, 253/255f),
+            Diffuse = float3(227/255f, 242/255f, 253/255f),
+            SpecularPower = 260,
+
+            WeightDiffuse = 0.01f,
+            WeightFresnel = 1f, // Glass sphere
+            RefractionIndex = 1.6f
+        };
 
         public static Material LightSource(float3 LightIntensity) => new Material
         {

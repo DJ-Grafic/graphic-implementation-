@@ -26,7 +26,7 @@ namespace DJGraphic
         {
             float4x4 result = Transforms.Scale(1, 1, 1);
             result = mul(result, Transforms.RotateZGrad(6));
-            result = mul(result, Transforms.Translate(-0.9f, -0.35f, 0.65f));
+            result = mul(result, Transforms.Translate(-1f, -0.35f, 0.65f));
             return result;
         }
 

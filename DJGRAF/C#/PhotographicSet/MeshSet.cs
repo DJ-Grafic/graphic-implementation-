@@ -64,7 +64,7 @@ namespace DJGraphic
             };
             // Draw the mesh.
 
-            //render.DrawMesh(test);
+            render.DrawMesh(test);
 
             //render.DrawMesh(glass1);
             //render.DrawMesh(water);

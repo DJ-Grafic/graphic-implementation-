@@ -23,7 +23,7 @@ namespace DJGraphic
 
             glass2(scene);
             water2(scene);
-            for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
+            for (int i = 0; i < 20; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
             clown(scene, towerTexture);
 
             //jarfront(scene);
@@ -79,7 +79,7 @@ namespace DJGraphic
             glass2.ComputeNormals();
             scene.Add(
                 glass2.AsRaycast(RaycastingMeshMode.Grid), 
-                ModelMaterial.Glass, 
+                ModelMaterial.Glass1, 
                 GlassOfWater<PositionNormalCoordinate>.Transform2()
             );
         };
@@ -124,7 +124,7 @@ namespace DJGraphic
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
             water.ComputeNormals();
-            //water.InverterNormals();
+            water.InverterNormals();
             scene.Add(
                 water.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Water, 

@@ -102,7 +102,7 @@ namespace DJGraphic
             glass2.ComputeNormals();
             scene.Add(
                 glass2.AsRaycast(RaycastingMeshMode.Grid), 
-                ModelMaterial.Glass, 
+                ModelMaterial.Glass1, 
                 GlassOfWater<PositionNormalCoordinate>.Transform2()
             );
         };
@@ -111,6 +111,7 @@ namespace DJGraphic
         (scene) => {
             var jar = JarOfWater<PositionNormalCoordinate>.Mesh().Weld();
             jar.ComputeNormals();
+            //jar.InverterNormals();
             scene.Add(
                 jar.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Glass, 
@@ -146,6 +147,7 @@ namespace DJGraphic
         (scene) => {
             var water = Waters<PositionNormalCoordinate>.MeshTest().Weld();
             water.ComputeNormals();
+            water.InverterNormals();
             scene.Add(
                 water.AsRaycast(RaycastingMeshMode.Grid), 
                 ModelMaterial.Water, 
@@ -180,7 +182,7 @@ namespace DJGraphic
 
             scene.Add(
                 sphereModel, 
-                ModelMaterial.Mirror, 
+                ModelMaterial.Bubble, 
                 mul(Transforms.Scale(size, size, size), Transforms.Translate(x, y, z))
             );
         };

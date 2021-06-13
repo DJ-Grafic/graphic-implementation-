@@ -10,7 +10,7 @@ namespace DJGraphic
     class Program
     {
         static float3 CameraPosition = float3(0, -4.5f, 1.1f);
-        static float3[] LightPosition = new float3[] { float3(-1, -1, 4f), float3(-2, -2, 4f), float3(3, -2, 4f) };
+        static float3[] LightPosition = new float3[] { float3(-1, -1, 4f), float3(-3, -2, 4f), float3(3, -2, 4f) };
         //static float3[] LightPosition = new float3[] {float3(0, -2, 4f) };
 
         static float3 LightIntensity = float3(1, 1, 1) * 500;
@@ -26,8 +26,8 @@ namespace DJGraphic
     
             
             //Mesh(viewMatrix, projectionMatrix, Height, Width);
-            //RaycastingMesh(viewMatrix, projectionMatrix, Height, Width);
-            PathtracingMesh(viewMatrix, projectionMatrix, Height, Width);
+            RaycastingMesh(viewMatrix, projectionMatrix, Height, Width);
+            //PathtracingMesh(viewMatrix, projectionMatrix, Height, Width);
         }
         
 

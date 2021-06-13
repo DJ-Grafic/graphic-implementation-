@@ -21,11 +21,11 @@ namespace DJGraphic
             
             glass1(scene);
             water1(scene);
-            for (int i = 0; i < 30; i++) bubble(scene, -0.4f, -1.2f, -0.2f);
+            for (int i = 0; i < 30; i++) bubble(scene, -0.5f, -1.3f, -0.25f, 0, 0);
 
             glass2(scene);
             water2(scene);
-            for (int i = 0; i < 30; i++) bubble(scene, 1.4f, 2.2f, 1.1f);
+            for (int i = 0; i < 30; i++) bubble(scene, 1.5f, 2.1f, 1.15f, 0.2f, -0.1f);
             clown(scene, towerTexture);
 
             jar(scene);
@@ -167,8 +167,8 @@ namespace DJGraphic
             );
         };
 
-        static Action<Scene<PositionNormalCoordinate, Material>, float, float, float> bubble = 
-        (scene, a, b, y) => {
+        static Action<Scene<PositionNormalCoordinate, Material>, float, float, float, float, float> bubble = 
+        (scene, a, b, y, z1, s) => {
             var sphereModel = Raycasting.UnitarySphere.AttributesMap(
                 a => new PositionNormalCoordinate { 
                     Position = a, 
@@ -176,9 +176,9 @@ namespace DJGraphic
                     Normal = normalize(a) });
 
 
-            float size = random() * 0.03f + 0.03f;
+            float size = random() * (0.03f + s) + (0.03f + s);
             float x = random() * (b-a)  + a;
-            float z = random() * -1.45f + 0.25f;
+            float z = random() * -1.45f + 0.25f + z1;
 
             scene.Add(
                 sphereModel, 
